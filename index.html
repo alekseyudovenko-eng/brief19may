@@ -1,324 +1,1002 @@
-import React from 'react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  BarChart,
-  Bar
-} from 'recharts';
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Рынок растительных масел и жиров | Vegetable Oils & Fats Market</title>
+    <style>
+        :root {
+            --bg: #f0f1f5;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --text2: #5a5a7a;
+            --accent: #e9c46a;
+            --accent2: #d4a843;
+            --navy: #1a1a2e;
+            --navy2: #16213e;
+            --navy3: #0f3460;
+            --green: #2a9d8f;
+            --red: #e76f51;
+            --border: #e8e8ec;
+            --shadow: 0 2px 12px rgba(26,26,46,0.08);
+        }
 
-export default function MarketReportApp() {
-  const [lang, setLang] = React.useState('ru');
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-  const content = {
-    insights: {
-      ru: {
-        serbia: 'С 1 мая 2026 года Сербия ввела обязательную маркировку продуктов с пальмовыми жирами с использованием «желтого треугольника». Новые правила требуют полной прозрачности цепочек поставок и цифровой регистрации закупок сельхозпродукции.',
-        poland: 'В Польше гидрологическая засуха в регионах Wielkopolskie и Lubuskie угрожает урожаю рапса. В отдельных районах урожайность может снизиться до 1–1.5 т/га.',
-        bulgaria: 'Болгария расширила инфраструктуру порта Варна, позволяя крупным танкерам из Юго-Восточной Азии разгружаться напрямую без перевалки через Турцию.',
-        kazakhstan: 'Казахстан открыл новый экспортный маршрут через порт Актау в Иран. Потенциал маршрута оценивается в 150–200 тыс. тонн масел в год.',
-        logistics: 'Средний коридор TITR сократил сроки доставки с 53 дней в 2022 году до 15 дней в 2026 году. Одновременно страховые премии в Черном море достигли 1% стоимости судна.',
-        eudr: 'Упрощение EUDR в ЕС сократило ожидаемые расходы на compliance примерно с €8.1 млрд до €2 млрд.'
-      },
-      en: {
-        serbia: 'Since May 1, 2026 Serbia introduced mandatory “yellow triangle” labeling for products containing palm-based fats. New regulations require higher supply-chain transparency and digital registration of agricultural procurement.',
-        poland: 'Hydrological drought in Poland’s Wielkopolskie and Lubuskie regions threatens rapeseed harvests, with yields in some areas potentially falling to 1–1.5 t/ha.',
-        bulgaria: 'Bulgaria expanded Port Varna infrastructure, allowing large Southeast Asian tankers to unload directly without Turkish transshipment.',
-        kazakhstan: 'Kazakhstan launched a new export route via Aktau port to Iran with estimated annual capacity of 150–200 thousand tons of vegetable oils.',
-        logistics: 'The TITR Middle Corridor reduced transit times from 53 days in 2022 to 15 days in 2026, while Black Sea insurance premiums surged to 1% of vessel value.',
-        eudr: 'EU EUDR simplification reduced expected compliance costs from approximately €8.1bn to €2bn.'
-      }
-    },
-    ru: {
-      title: 'Аналитический отчет по рынку растительных масел и жиров',
-      subtitle: 'Ключевые события · 11–18 мая 2026',
-      summaryTitle: 'Краткое резюме',
-      summary:
-        'Период характеризовался высокой геополитической напряженностью, устойчивыми ценами на нефть выше 100 USD/barrel и сокращением глобального баланса растительных масел на фоне роста спроса со стороны биотопливного сектора. Пальмовое масло удерживалось выше 4,500 RM/t, а рынок Европы продолжал активно использовать дисконт palm oil к gasoil.',
-      highlightsTitle: 'Ключевые акценты',
-      highlights: [
-        'Сербия усилила регулирование пищевой продукции с пальмовыми ингредиентами.',
-        'Узбекистан использует лишь 37% перерабатывающих мощностей.',
-        'Средний коридор TITR сократил сроки доставки до 15 дней.',
-        'Засуха в Польше и странах Балтии ухудшает перспективы урожая рапса.'
-      ],
-      pricingTitle: 'Цены и конкурентная среда',
-      pricingText:
-        'Пальмовое масло восстановилось после коррекции начала мая. Аналитики ожидают рост котировок летом 2026 года благодаря ограниченному предложению и росту биотопливного спроса.',
-      productionTitle: 'Производство и торговые потоки',
-      productionText:
-        'Польша столкнулась с засухой, Болгария расширяет мощности порта Варна, а Казахстан активно развивает экспорт через Каспийский маршрут. Узбекистан остается зависимым от импортного сырья.',
-      logisticsTitle: 'Логистика и безопасность',
-      logisticsText:
-        'Маршрут TITR укрепляет позиции как более быстрый и безопасный коридор между Азией и Европой.',
-      regulationTitle: 'Регулирование и EUDR',
-      regulationText:
-        'ЕС подтвердил упрощение требований EUDR, а страны Кавказа усилили сотрудничество в области продовольственной безопасности.',
-      conclusionTitle: 'Выводы',
-      conclusion:
-        'Пальмовое масло продолжает усиливать позиции как один из наиболее стабильных ресурсов региона.',
-      switcher: 'English'
-    },
-    en: {
-      title: 'Analytical Report on the Vegetable Oils and Fats Market',
-      subtitle: 'Key Events · 11–18 May 2026',
-      summaryTitle: 'Executive Summary',
-      summary:
-        'The period was marked by elevated geopolitical tensions, crude oil prices above USD 100/bbl, and tightening vegetable oil balances due to growing biofuel demand. Palm oil prices remained above RM 4,500/t while Europe continued benefiting from the palm oil discount to gasoil.',
-      highlightsTitle: 'Key Highlights',
-      highlights: [
-        'Serbia strengthened regulations for food products containing palm-based ingredients.',
-        'Uzbekistan is utilizing only 37% of crushing capacity.',
-        'The TITR corridor reduced delivery times to 15 days.',
-        'Drought in Poland and the Baltics is impacting rapeseed prospects.'
-      ],
-      pricingTitle: 'Pricing and Competitive Environment',
-      pricingText:
-        'Palm oil rebounded after the early-May correction. Analysts expect prices to strengthen further during summer 2026.',
-      productionTitle: 'Production and Trade Flows',
-      productionText:
-        'Poland faces drought risks, Bulgaria expands Port Varna capacity, and Kazakhstan develops exports through the Caspian route. Uzbekistan remains dependent on imported feedstock.',
-      logisticsTitle: 'Logistics and Security',
-      logisticsText:
-        'The TITR corridor is strengthening its role as a faster and safer route between Asia and Europe.',
-      regulationTitle: 'Regulation and EUDR',
-      regulationText:
-        'The EU confirmed EUDR simplification measures while Caucasus countries expanded food safety cooperation.',
-      conclusionTitle: 'Conclusion',
-      conclusion:
-        'Palm oil continues strengthening its position as one of the region’s most stable commodities.',
-      switcher: 'Русский'
-    }
-  };
+        html { scroll-behavior: smooth; }
 
-  const t = content[lang];
-  const extra = content.insights[lang];
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
 
-  const priceData = [
-    { date: '07 May', price: 4559 },
-    { date: '11 May', price: 4551 },
-    { date: '14 May', price: 4438 },
-    { date: '15 May', price: 4420 },
-    { date: '18 May', price: 4540 }
-  ];
+        .app {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--bg);
+            min-height: 100vh;
+            position: relative;
+        }
 
-  const spreadData = [
-    { product: 'Palm Olein', value: 1202 },
-    { product: 'Sunflower Oil', value: 1200 },
-    { product: 'Rapeseed Oil', value: 1323 },
-    { product: 'Soybean Oil', value: 1516 }
-  ];
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(160deg, var(--navy) 0%, var(--navy2) 40%, var(--navy3) 100%);
+            padding: 28px 20px 22px;
+            position: relative;
+            overflow: hidden;
+        }
 
-  return (
-    <div className="min-h-screen bg-neutral-100 text-neutral-900 font-sans">
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        <div className="sticky top-0 z-20 bg-neutral-100 py-4 flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-              {t.title}
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -40px;
+            width: 180px; height: 180px;
+            background: rgba(233,196,106,0.06);
+            border-radius: 50%;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px; left: -20px;
+            width: 120px; height: 120px;
+            background: rgba(233,196,106,0.04);
+            border-radius: 50%;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(233,196,106,0.12);
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(233,196,106,0.18);
+        }
+
+        .badge-pulse {
+            width: 6px; height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse 2.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.35; transform: scale(0.8); }
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 3px;
+            background: rgba(255,255,255,0.08);
+            padding: 3px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lang-btn {
+            padding: 5px 14px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+            font-family: inherit;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--navy);
+            box-shadow: 0 2px 8px rgba(233,196,106,0.3);
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 21px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.3px;
+        }
+
+        .header-sub {
+            color: rgba(255,255,255,0.55);
+            font-size: 13px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== DATE STRIP ===== */
+        .date-strip {
+            background: var(--accent);
+            color: var(--navy);
+            padding: 10px 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 0.3px;
+        }
+
+        .date-strip .muted {
+            opacity: 0.65;
+            font-weight: 600;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            background: var(--card);
+            margin: 12px 0;
+            padding: 22px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .section:first-of-type {
+            margin-top: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+
+        .section-icon.gold { background: rgba(233,196,106,0.12); }
+        .section-icon.blue { background: rgba(15,52,96,0.08); }
+        .section-icon.red { background: rgba(231,111,81,0.08); }
+        .section-icon.green { background: rgba(42,157,143,0.08); }
+        .section-icon.purple { background: rgba(118,75,162,0.08); }
+        .section-icon.navy { background: rgba(26,26,46,0.06); }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .section-body {
+            font-size: 14.5px;
+            color: var(--text2);
+            line-height: 1.75;
+        }
+
+        .section-body p {
+            margin-bottom: 14px;
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== HIGHLIGHT BOX ===== */
+        .highlight-box {
+            background: linear-gradient(135deg, #fafbfc 0%, #fff 100%);
+            border-left: 3px solid var(--accent);
+            padding: 16px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 0 12px 12px 0;
+            background: linear-gradient(135deg, rgba(233,196,106,0.03), transparent);
+            pointer-events: none;
+        }
+
+        .highlight-box strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .highlight-box p {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== TABLES ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-wrap::-webkit-scrollbar {
+            height: 4px;
+        }
+        .table-wrap::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 520px;
+        }
+
+        thead {
+            background: var(--navy);
+            color: #fff;
+        }
+
+        th {
+            padding: 11px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px 14px;
+            border-bottom: 1px solid var(--border);
+            color: #333;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        .price-up { color: var(--green); font-weight: 700; }
+        .price-down { color: var(--red); font-weight: 700; }
+        .price-stable { color: #888; font-weight: 700; }
+        .price-alert { color: var(--red); font-weight: 700; }
+
+        .table-source {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* ===== SUB-SECTION ===== */
+        .sub-section {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px dashed #e0e0e5;
+        }
+
+        .sub-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--navy3);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-title::before {
+            content: '';
+            width: 4px;
+            height: 14px;
+            background: var(--navy3);
+            border-radius: 3px;
+        }
+
+        /* ===== STATS ROW ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fb;
+            padding: 18px 14px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:active {
+            transform: scale(0.97);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #999;
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        /* ===== CONCLUSION ===== */
+        .conclusion-box {
+            background: linear-gradient(160deg, var(--navy) 0%, var(--navy2) 50%, var(--navy3) 100%);
+            color: #fff;
+            padding: 26px 20px;
+            margin: 12px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .conclusion-box::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 140px; height: 140px;
+            background: rgba(233,196,106,0.05);
+            border-radius: 50%;
+        }
+
+        .conclusion-box .section-title {
+            color: var(--accent);
+        }
+
+        .conclusion-box .section-body {
+            color: rgba(255,255,255,0.82);
+        }
+
+        .conclusion-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+
+        .conclusion-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .conclusion-num {
+            width: 28px; height: 28px;
+            background: var(--accent);
+            color: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #e8e8ec;
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 12px;
+        }
+
+        .footer-divider {
+            width: 36px;
+            height: 3px;
+            background: var(--accent);
+            margin: 0 auto 10px;
+            border-radius: 2px;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .lang-ru, .lang-en {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lang-ru.active, .lang-en.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== INLINE LANG IN TABLES ===== */
+        td .lang-ru, td .lang-en,
+        th .lang-ru, th .lang-en {
+            display: inline;
+        }
+
+        td .lang-ru.active, td .lang-en.active,
+        th .lang-ru.active, th .lang-en.active {
+            display: inline;
+        }
+
+        /* ===== SCROLL TO TOP ===== */
+        .scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px; height: 44px;
+            background: var(--accent);
+            color: var(--navy);
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(233,196,106,0.4);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== TELEGRAM SPECIFIC ===== */
+        @media (max-width: 600px) {
+            .app { border-radius: 0; }
+            .section { margin: 8px 0; padding: 18px 16px; }
+            .header { padding: 24px 16px 20px; }
+            .header h1 { font-size: 19px; }
+            .date-strip { padding: 10px 16px; font-size: 10px; }
+            .section-body { font-size: 14px; }
+            table { font-size: 12px; }
+            th, td { padding: 9px 11px; }
+            .stat-value { font-size: 22px; }
+        }
+
+        /* Dark mode support hint for Telegram */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #12121a;
+                --card: #1e1e2e;
+                --text: #e8e8f0;
+                --text2: #a0a0b8;
+                --border: #2a2a3e;
+            }
+            .stat-card { background: #252538; }
+            .highlight-box { background: linear-gradient(135deg, #252538 0%, #1e1e2e 100%); }
+            tr:nth-child(even) { background: #252538; }
+            td { color: #ccc; }
+            .footer { background: #1a1a28; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-top">
+                <div class="badge">
+                    <span class="badge-pulse"></span>
+                    <span class="lang-ru active">Аналитический отчёт</span>
+                    <span class="lang-en">Analytical Report</span>
+                </div>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" onclick="setLang('ru')" aria-label="Russian">RU</button>
+                    <button class="lang-btn" onclick="setLang('en')" aria-label="English">EN</button>
+                </div>
+            </div>
+            <h1>
+                <span class="lang-ru active">Рынок растительных масел и жиров</span>
+                <span class="lang-en">Vegetable Oils & Fats Market</span>
             </h1>
-            <p className="text-neutral-600 mt-2">{t.subtitle}</p>
-          </div>
-
-          <button
-            onClick={() => setLang(lang === 'ru' ? 'en' : 'ru')}
-            className="bg-black text-white px-4 py-2 rounded-2xl shadow-lg"
-          >
-            {t.switcher}
-          </button>
+            <div class="header-sub">
+                <span class="lang-ru active">Ключевые события: 27 апреля — 4 мая 2026</span>
+                <span class="lang-en">Key Events: April 27 – May 4, 2026</span>
+            </div>
         </div>
 
-        <img
-          src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=1600&auto=format&fit=crop"
-          alt="Market"
-          className="w-full h-72 object-cover rounded-3xl shadow-xl mb-8"
-        />
+        <!-- DATE STRIP -->
+        <div class="date-strip">
+            <span>
+                <span class="lang-ru active">📍 Страны: ЕС-27, Азербайджан, Армения, Беларусь, Казахстан, Кыргызстан, Россия, Таджикистан, Туркменистан, Узбекистан, Грузия, Украина</span>
+                <span class="lang-en">📍 Countries: EU-27, Azerbaijan, Armenia, Belarus, Kazakhstan, Kyrgyzstan, Russia, Tajikistan, Turkmenistan, Uzbekistan, Georgia, Ukraine</span>
+            </span>
+        </div>
 
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">{t.summaryTitle}</h2>
-          <p className="leading-8 text-neutral-700">{t.summary}</p>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-5">{t.highlightsTitle}</h2>
-
-          <div className="grid gap-4">
-            {t.highlights.map((item, index) => (
-              <div
-                key={index}
-                className="bg-neutral-100 rounded-2xl p-4 leading-7"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">{t.pricingTitle}</h2>
-          <p className="leading-8 text-neutral-700 mb-8">
-            {t.pricingText}
-          </p>
-
-          <div className="mb-10">
-            <h3 className="font-semibold text-lg mb-4">CPO Futures</h3>
-
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={priceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="price"
-                    stroke="#111827"
-                    strokeWidth={3}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon gold">📋</div>
+                <div class="section-title">
+                    <span class="lang-ru active">Резюме</span>
+                    <span class="lang-en">Executive Summary</span>
+                </div>
             </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-4">
-              Vegetable Oil Price Spread
-            </h3>
-
-            <div className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={spreadData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="product" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#111827" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+            <div class="section-body">
+                <p class="lang-ru active">
+                    Период с 27 апреля по 4 мая 2026 года ознаменовался фазой «регуляторной и климатической турбулентности» для евразийского рынка растительных масел. Основной макроэкономический драйвер — снижение цен на нефть Brent ниже $98 за баррель на фоне сигналов о деэскалации в Персидском заливе. Это спровоцировало техническую коррекцию котировок сырого пальмового масла (CPO) на Bursa Malaysia, которые стабилизировались в диапазоне 4,500–4,600 ринггит/т.
+                </p>
+                <p class="lang-en">
+                    The period from April 27 to May 4, 2026, marked a phase of "regulatory and climatic turbulence" for the Eurasian vegetable oil market. The primary macroeconomic driver was the decline in Brent crude prices below $98 per barrel following signals of de-escalation in the Persian Gulf. This triggered a technical correction in Crude Palm Oil (CPO) quotations on Bursa Malaysia, which settled within the 4,500–4,600 RM/t range.
+                </p>
+                <p class="lang-ru active">
+                    Отчётный период открыл значимые стратегические окна в Восточной Европе: Сербия ввела новый Закон о торговле (с 1 мая), требующий полной цифровой прозрачности цепочек поставок, тогда как Польша и Прибалтика столкнулись с гидрологической засухой, угрожающей урожаю рапса 2026 года. В Центральной Азии подтверждён резкий рост импортозависимости: импорт рафинированного подсолнечного масла Узбекистаном из Казахстана вырос на 41%, что, несмотря на рост внутреннего производства на 11,1%, указывает на критический дефицит сырья для региональной кондитерской промышленности.
+                </p>
+                <p class="lang-en">
+                    The reporting period opened significant strategic windows in Eastern Europe: Serbia enacted its new Law on Trade (effective May 1), requiring full digital transparency in supply chains, while Poland and the Baltic States faced a hydrological drought threatening the 2026 rapeseed harvest. In Central Asia, a sharp increase in import dependency was confirmed: Uzbekistan's imports of refined sunflower oil from Kazakhstan surged by 41%, which, despite an 11.1% growth in domestic refined oil production, underscores a critical raw material deficit for the regional confectionery sector.
+                </p>
             </div>
-          </div>
-        </section>
+        </div>
 
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <img
-            src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200&auto=format&fit=crop"
-            alt="Logistics"
-            className="w-full h-56 rounded-2xl object-cover mb-6"
-          />
-
-          <h2 className="text-2xl font-bold mb-4">{t.productionTitle}</h2>
-          <p className="leading-8 text-neutral-700 mb-6">
-            {t.productionText}
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-neutral-100 rounded-2xl p-5 leading-7">
-              <h3 className="font-bold mb-2">Serbia</h3>
-              {extra.serbia}
+        <!-- PRICING -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon blue">💰</div>
+                <div class="section-title">
+                    <span class="lang-ru active">Ценообразование</span>
+                    <span class="lang-en">Pricing Dynamics</span>
+                </div>
             </div>
+            <div class="section-body">
+                <p class="lang-ru active">
+                    После 15-месячных максимумов в апреле рынок CPO вступил в фазу стабилизации. Давление на цены оказали укрепление ринггита и снижение индийского импорта до годового минимума (505,000 тонн в апреле).
+                </p>
+                <p class="lang-en">
+                    Following 15-month highs in April, the CPO market entered a stabilization phase. Pressure on prices was exerted by a stronger Ringgit and a decrease in Indian imports to a yearly low (505,000 tonnes in April).
+                </p>
 
-            <div className="bg-neutral-100 rounded-2xl p-5 leading-7">
-              <h3 className="font-bold mb-2">Poland</h3>
-              {extra.poland}
+                <div class="sub-section">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Котировки CPO на Bursa Malaysia</span>
+                        <span class="lang-en">CPO Quotations on Bursa Malaysia</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><span class="lang-ru active">Дата</span><span class="lang-en">Date</span></th>
+                                    <th><span class="lang-ru active">Цена (RM/т)</span><span class="lang-en">Price (RM/t)</span></th>
+                                    <th><span class="lang-ru active">Изм. (д/д)</span><span class="lang-en">Change (d/d)</span></th>
+                                    <th><span class="lang-ru active">Контракт</span><span class="lang-en">Contract</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>27.04.2026</td>
+                                    <td>4,535</td>
+                                    <td class="price-down">−62</td>
+                                    <td>July 2026</td>
+                                </tr>
+                                <tr>
+                                    <td>28.04.2026</td>
+                                    <td>4,469</td>
+                                    <td class="price-down">−66</td>
+                                    <td>July 2026</td>
+                                </tr>
+                                <tr>
+                                    <td>30.04.2026</td>
+                                    <td>4,570</td>
+                                    <td class="price-up">+101</td>
+                                    <td>July 2026</td>
+                                </tr>
+                                <tr>
+                                    <td>05.05.2026</td>
+                                    <td>4,710</td>
+                                    <td class="price-up">+140</td>
+                                    <td>July 2026</td>
+                                </tr>
+                                <tr>
+                                    <td>06.05.2026</td>
+                                    <td>4,527</td>
+                                    <td class="price-down">−183</td>
+                                    <td>July 2026</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Спред POGO и биодизельный паритет</span>
+                        <span class="lang-en">POGO Spread and Biofuel Parity</span>
+                    </div>
+                    <p class="lang-ru active">
+                        Спред пальмовое масло — газойль является критическим показателем, определяющим рентабельность использования пальмового масла в качестве сырья для биодизеля. В начале мая спред по фронтальному контракту вышел в глубокую скидку (−$93.17), фактически восстановив маржи смешивания в ЕС.
+                    </p>
+                    <p class="lang-en">
+                        The Palm Oil — Gasoil spread is a critical metric as it determines the profitability of using palm oil as a feedstock for biodiesel. In early May, the spread for the front-month contract moved into a deep discount (−$93.17), effectively restoring blending margins in the EU.
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><span class="lang-ru active">Контракт</span><span class="lang-en">Contract</span></th>
+                                    <th><span class="lang-ru active">Значение ($/т)</span><span class="lang-en">Value (USD/t)</span></th>
+                                    <th><span class="lang-ru active">Тренд (н/н)</span><span class="lang-en">Trend (WoW)</span></th>
+                                    <th><span class="lang-ru active">Статус</span><span class="lang-en">Status</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>May 2026 (POGK6)</td>
+                                    <td class="price-down">−93.17</td>
+                                    <td class="price-down">−9.92</td>
+                                    <td><span class="lang-ru active">Скидка</span><span class="lang-en">Discount</span></td>
+                                </tr>
+                                <tr>
+                                    <td>June 2026 (POGM6)</td>
+                                    <td>+6.50</td>
+                                    <td class="price-down">−21.25</td>
+                                    <td><span class="lang-ru active">Паритет</span><span class="lang-en">Parity</span></td>
+                                </tr>
+                                <tr>
+                                    <td>July 2026 (POGN6)</td>
+                                    <td class="price-up">+80.50</td>
+                                    <td class="price-down">−18.51</td>
+                                    <td><span class="lang-ru active">Премия</span><span class="lang-en">Premium</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-source">
+                        <span class="lang-ru active">Период: 1–6 мая 2026</span>
+                        <span class="lang-en">Period: May 1–6, 2026</span>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Сравнительный анализ цен</span>
+                        <span class="lang-en">Comparative Price Analysis</span>
+                    </div>
+                    <p class="lang-ru active">
+                        Пальмовое масло сохраняет позицию наиболее доступного ресурса для пищевой промышленности, торгуясь со значительной скидкой к соевому и рапсовому маслам.
+                    </p>
+                    <p class="lang-en">
+                        Palm oil maintains its position as the most affordable resource for the food industry, trading at a significant discount to soybean and rapeseed oils.
+                    </p>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><span class="lang-ru active">Продукт</span><span class="lang-en">Product</span></th>
+                                    <th><span class="lang-ru active">Базис / Регион</span><span class="lang-en">Basis / Region</span></th>
+                                    <th><span class="lang-ru active">Цена ($/т)</span><span class="lang-en">Price (USD/t)</span></th>
+                                    <th><span class="lang-ru active">Изм. к марту</span><span class="lang-en">Change vs March</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Palm Olein (RBD)</td>
+                                    <td>FOB Malaysia</td>
+                                    <td>1,202</td>
+                                    <td class="price-up">+9.9%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="lang-ru active">Подсолнечное масло</span><span class="lang-en">Sunflower Oil</span></td>
+                                    <td>FOB Black Sea</td>
+                                    <td>1,100–1,250</td>
+                                    <td class="price-down"><span class="lang-ru active">Снижение</span><span class="lang-en">Downward</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="lang-ru active">Рапсовое масло</span><span class="lang-en">Rapeseed Oil</span></td>
+                                    <td>FOB Rotterdam</td>
+                                    <td>1,323</td>
+                                    <td class="price-up">+2.2%</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="lang-ru active">Соевое масло</span><span class="lang-en">Soybean Oil</span></td>
+                                    <td>CBOT (Chicago)</td>
+                                    <td>1,516</td>
+                                    <td class="price-up">+4.5%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div className="bg-neutral-100 rounded-2xl p-5 leading-7">
-              <h3 className="font-bold mb-2">Bulgaria</h3>
-              {extra.bulgaria}
+        <!-- PRODUCTION & TRADE -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon green">🌾</div>
+                <div class="section-title">
+                    <span class="lang-ru active">Производство и торговля</span>
+                    <span class="lang-en">Production & Trade Flows</span>
+                </div>
             </div>
+            <div class="section-body">
 
-            <div className="bg-neutral-100 rounded-2xl p-5 leading-7">
-              <h3 className="font-bold mb-2">Kazakhstan</h3>
-              {extra.kazakhstan}
+                <div class="sub-section" style="border-top:none; margin-top:0; padding-top:0;">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Сербия: регуляторика пищевой промышленности</span>
+                        <span class="lang-en">Serbia: Food Industry Regulations</span>
+                    </div>
+                    <p class="lang-ru active">
+                        С 1 августа 2025 года в Сербии все молочные продукты и молочные аналоги, содержащие пальмовое или другое растительное масло, обязаны иметь предупреждение на лицевой стороне упаковки в виде жёлтого треугольника с указанием, что продукт не является 100% молочным. С 1 мая 2026 года вступает в силу новый Закон о торговле, вводящий электронный реестр «e-otkupno mesto» для повышения прозрачности закупок.
+                    </p>
+                    <p class="lang-en">
+                        As of August 1, 2025, all dairy products and dairy-like products containing palm oil or other vegetable oils in Serbia must carry a front-of-pack yellow triangle warning stating that the product is not 100% dairy. Effective May 1, 2026, the new Law on Trade introduces the "e-otkupno mesto" electronic registry to increase transparency in procurement.
+                    </p>
+                </div>
+
+                <div class="sub-section">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Польша и Чехия: климатический шок</span>
+                        <span class="lang-en">Poland & Czech Republic: Climate Shock</span>
+                    </div>
+                    <p class="lang-ru active">
+                        <strong>Засуха в Польше:</strong> гидрологическая засуха объявлена в воеводствах Великопольское и Любуское. Состояние озимого рапса оценивается как критическое (риск потери урожая 5–15%), что создаёт дефицит мягких масел и открывает окно для поставок пальмового олеина.
+                    </p>
+                    <p class="lang-en">
+                        <strong>Drought in Poland:</strong> A hydrological drought has been declared in the Wielkopolskie and Lubuskie voivodeships. The condition of winter rapeseed is rated as critical (risk of 5–15% yield loss), creating a deficit in soft oils and opening a window for palm olein supplies.
+                    </p>
+                    <p class="lang-ru active">
+                        <strong>Чехия:</strong> идёт подготовка к Czech Food Expo (14–17 мая) в Праге. Ключевая тема — «Устойчивость цепочек поставок». Чешские переработчики активно ищут альтернативы волатильному украинскому подсолнечному маслу.
+                    </p>
+                    <p class="lang-en">
+                        <strong>Czech Republic:</strong> Preparations are underway for the Czech Food Expo (May 14–17) in Prague. The key theme is "Supply Chain Resiliency," with Czech processors actively seeking alternatives to volatile Ukrainian sunflower oil.
+                    </p>
+                </div>
+
+                <div class="sub-section">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Болгария и Прибалтика: логистические рекорды</span>
+                        <span class="lang-en">Bulgaria & Baltics: Logistical Records</span>
+                    </div>
+                    <p class="lang-ru active">
+                        <strong>Болгария:</strong> порт Варна ввёл в эксплуатацию новый глубоководный причал (−12,5 м) на терминале Одессос ПБМ, позволяющий принимать танкеры напрямую, минуя перевалку в Стамбуле.
+                    </p>
+                    <p class="lang-en">
+                        <strong>Bulgaria:</strong> The Port of Varna commissioned a new deepwater berth (−12.5 m) at the Odessos PBM terminal, allowing for the direct reception of tankers, bypassing transshipment in Istanbul.
+                    </p>
+                    <p class="lang-ru active">
+                        <strong>Литва (Клайпеда):</strong> в I квартале 2026 года зафиксирован рост контейнеропереработки на 38%. Клайпеда становится основным хабом для дистрибуции азиатских жиров в Скандинавию и Северную Германию.
+                    </p>
+                    <p class="lang-en">
+                        <strong>Lithuania (Klaipėda):</strong> A 38% growth in container throughput was recorded in Q1 2026. Klaipėda is becoming the primary hub for distributing Asian fats to Scandinavia and Northern Germany.
+                    </p>
+                </div>
+
+                <div class="sub-section">
+                    <div class="sub-title">
+                        <span class="lang-ru active">Центральная Азия: обновлённая статистика</span>
+                        <span class="lang-en">Central Asia: Updated Statistics</span>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-value" style="color:var(--green);">+41%</div>
+                            <div class="stat-label">
+                                <span class="lang-ru active">Импорт раф. подсолнечного<br>масла Узбекистаном<br>из Казахстана</span>
+                                <span class="lang-en">Uzbekistan's imports of<br>refined sunflower oil<br>from Kazakhstan</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" style="color:var(--green);">+11.1%</div>
+                            <div class="stat-label">
+                                <span class="lang-ru active">Внутреннее производство<br>раф. масла<br>Узбекистан (янв–фев)</span>
+                                <span class="lang-en">Domestic refined oil<br>production Uzbekistan<br>(Jan–Feb)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="lang-ru active">
+                        В январе–феврале 2026 года крупные предприятия Узбекистана произвели 32,800 тонн рафинированного масла (+11.1%). Однако импорт рафинированного подсолнечного масла из Казахстана вырос на 41% (до 24,000 тонн), подтверждая масштабный неудовлетворённый спрос в B2B-сегменте.
+                    </p>
+                    <p class="lang-en">
+                        In January–February 2026, large enterprises in Uzbekistan produced 32,800 tonnes of refined oil (+11.1%). However, imports of refined sunflower oil from Kazakhstan jumped by 41% (to 24,000 tonnes), confirming massive unmet demand in the B2B segment.
+                    </p>
+                    <p class="lang-ru active">
+                        Казахстан планирует транзит до 1,000 контейнерных поездов через ТМТМ («Средний коридор») в 2026 году. Абсолютный рекорд установлен 12 апреля — 6 поездов из Китая отправлено за один день.
+                    </p>
+                    <p class="lang-en">
+                        Kazakhstan plans to transit up to 1,000 container trains via the TITR (Middle Corridor) in 2026. An absolute record was set on April 12, with 6 trains from China dispatched in a single day.
+                    </p>
+                </div>
             </div>
-          </div>
-        </section>
+        </div>
 
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <img
-            src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=1200&auto=format&fit=crop"
-            alt="Shipping"
-            className="w-full h-56 rounded-2xl object-cover mb-6"
-          />
+        <!-- REGULATORY -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-icon purple">⚖️</div>
+                <div class="section-title">
+                    <span class="lang-ru active">Регуляторика: EUDR</span>
+                    <span class="lang-en">Regulatory: EUDR</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <p class="lang-ru active">
+                    4 мая 2026 года Еврокомиссия опубликовала отчёт, подтверждающий существенное сокращение административных процедур (ожидается снижение затрат на соответствие на 75%):
+                </p>
+                <p class="lang-en">
+                    On May 4, 2026, the European Commission published a report confirming a substantial reduction in administrative procedures (expected to cut compliance costs by 75%):
+                </p>
 
-          <h2 className="text-2xl font-bold mb-4">{t.logisticsTitle}</h2>
-          <p className="leading-8 text-neutral-700 mb-6">
-            {t.logisticsText}
-          </p>
+                <div class="highlight-box">
+                    <p class="lang-ru active">
+                        <strong>Снижение нагрузки на downstream:</strong> ответственность за подачу декларации о должной осмотрительности (DDS) теперь лежит исключительно на первом импортёре в ЕС. Это существенно повышает привлекательность сертифицированного пальмового масла для европейских кондитерских фабрик.
+                    </p>
+                    <p class="lang-en">
+                        <strong>Downstream Relief:</strong> Responsibility for submitting the Due Diligence Statement (DDS) now rests solely with the first importer into the EU. This significantly increases the attractiveness of certified palm oil for European confectionery factories.
+                    </p>
+                </div>
 
-          <div className="bg-neutral-100 rounded-2xl p-5 leading-8 mb-6 text-neutral-700">
-            {extra.logistics}
-          </div>
+                <ul style="margin:12px 0 0 18px; color:var(--text2); font-size:14px; line-height:1.9;">
+                    <li class="lang-ru active"><strong>Расширение scope:</strong> в сферу действия EUDR официально включены мыло и другие косметические производные на основе пальмового масла.</li>
+                    <li class="lang-en"><strong>Expanded Scope:</strong> The EUDR scope now officially includes soap and other cosmetic derivatives based on palm oil.</li>
+                    <li class="lang-ru active"><strong>Сроки:</strong> соответствие для крупных компаний подтверждено на 30 декабря 2026; для МСП — 30 июня 2027.</li>
+                    <li class="lang-en"><strong>Deadlines:</strong> Compliance for large companies is confirmed for December 30, 2026; for SMEs, June 30, 2027.</li>
+                </ul>
+            </div>
+        </div>
 
-          <div className="overflow-hidden rounded-2xl border border-neutral-200">
-            <table className="w-full text-sm">
-              <thead className="bg-black text-white">
-                <tr>
-                  <th className="text-left p-4">Route</th>
-                  <th className="text-left p-4">Transit</th>
-                  <th className="text-left p-4">Freight</th>
-                  <th className="text-left p-4">Risk</th>
-                </tr>
-              </thead>
+        <!-- CONCLUSION -->
+        <div class="conclusion-box">
+            <div class="section-header" style="margin-bottom:18px;">
+                <div class="section-icon" style="background:rgba(233,196,106,0.15);">🎯</div>
+                <div class="section-title">
+                    <span class="lang-ru active">Выводы для индустрии</span>
+                    <span class="lang-en">Implications for the Industry</span>
+                </div>
+            </div>
+            <div class="section-body">
+                <div class="conclusion-item">
+                    <div class="conclusion-num">1</div>
+                    <div>
+                        <span class="lang-ru active"><strong>Сербия:</strong> использовать обязательную маркировку «жёлтый треугольник» как повод для PR-кампании, объясняющей преимущества пальмового масла — в частности, отсутствие трансжиров и устойчивость по стандарту MSPO.</span>
+                        <span class="lang-en"><strong>Serbia:</strong> Leverage the mandatory "yellow triangle" labeling as a reason for a PR campaign explaining the benefits of palm oil, specifically its absence of trans fats and MSPO sustainability.</span>
+                    </div>
+                </div>
+                <div class="conclusion-item">
+                    <div class="conclusion-num">2</div>
+                    <div>
+                        <span class="lang-ru active"><strong>Польша:</strong> подготовить «страховые объёмы» пальмового олеина для польских производителей биодизеля в преддверии подтверждённых потерь урожая рапса после 20 мая.</span>
+                        <span class="lang-en"><strong>Poland:</strong> Prepare "insurance volume" offers of palm olein for Polish biodiesel producers in anticipation of confirmed rapeseed crop failures after May 20.</span>
+                    </div>
+                </div>
+                <div class="conclusion-item">
+                    <div class="conclusion-num">3</div>
+                    <div>
+                        <span class="lang-ru active"><strong>Узбекистан:</strong> ускорить проект «stock positioning» в Ташкенте для захвата 41%-ного роста импортного спроса до пересмотра тарифной политики в 2027 году.</span>
+                        <span class="lang-en"><strong>Uzbekistan:</strong> Fast-track the "stock positioning" project in Tashkent to capture the 41% growth in import demand before tariff policies are reviewed in 2027.</span>
+                    </div>
+                </div>
+                <div class="conclusion-item">
+                    <div class="conclusion-num">4</div>
+                    <div>
+                        <span class="lang-ru active"><strong>Логистика:</strong> акцентировать использование порта Клайпеда (+38% рост эффективности) для поставок в страны Северной ЕС, сокращая маршруты и избегая рисков Красного моря.</span>
+                        <span class="lang-en"><strong>Logistics:</strong> Emphasize the use of the Port of Klaipėda (+38% efficiency growth) for supplying Northern EU countries, shortening routes and avoiding Red Sea risks.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-              <tbody>
-                <tr className="border-b">
-                  <td className="p-4">TITR</td>
-                  <td className="p-4">15–19 days</td>
-                  <td className="p-4">$3,500–4,500</td>
-                  <td className="p-4">Low</td>
-                </tr>
-
-                <tr>
-                  <td className="p-4">Black Sea</td>
-                  <td className="p-4">37–45 days</td>
-                  <td className="p-4">$10,000+</td>
-                  <td className="p-4">High</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <img
-            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop"
-            alt="Regulation"
-            className="w-full h-56 rounded-2xl object-cover mb-6"
-          />
-
-          <h2 className="text-2xl font-bold mb-4">
-            {t.regulationTitle}
-          </h2>
-
-          <p className="leading-8 text-neutral-700 mb-6">
-            {t.regulationText}
-          </p>
-
-          <div className="bg-neutral-100 rounded-2xl p-5 leading-8 text-neutral-700">
-            {extra.eudr}
-          </div>
-        </section>
-
-        <section className="bg-black text-white rounded-3xl shadow-2xl p-8 mb-10">
-          <h2 className="text-2xl font-bold mb-4">
-            {t.conclusionTitle}
-          </h2>
-
-          <p className="leading-8 text-neutral-300">
-            {t.conclusion}
-          </p>
-        </section>
-
-        <footer className="text-center text-sm text-neutral-500 pb-10">
-          Telegram Instant View Ready · Mobile Optimized · Bilingual Interface
-        </footer>
-      </div>
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="footer-divider"></div>
+            <span class="lang-ru active">Аналитический отчёт | 5 мая 2026</span>
+            <span class="lang-en">Analytical Report | May 5, 2026</span>
+        </div>
     </div>
-  );
-}
+
+    <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
+
+    <script>
+        // Language switcher
+        function setLang(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+            });
+            document.querySelectorAll('.lang-ru, .lang-en').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-' + lang).forEach(el => {
+                el.classList.add('active');
+            });
+            try { localStorage.setItem('preferredLang', lang); } catch(e) {}
+        }
+
+        // Restore saved language
+        (function() {
+            try {
+                const saved = localStorage.getItem('preferredLang');
+                if (saved && saved !== 'ru') setLang(saved);
+            } catch(e) {}
+        })();
+
+        // Scroll to top button
+        const scrollBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+
+        // Telegram WebApp integration
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+        }
+    </script>
+</body>
+</html>
