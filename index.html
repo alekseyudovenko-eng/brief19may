@@ -1,310 +1,401 @@
-import React, { useState } from 'react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  BarChart,
-  Bar
-} from 'recharts';
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Рынок масел и жиров | Обзор</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-export default function MarketReportApp() {
-  const [lang, setLang] = useState<'ru' | 'en'>('ru');
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background: #f0f2f5;
+            color: #1e2a3a;
+            padding: 0;
+            line-height: 1.5;
+        }
 
-  const content = {
-    insights: {
-      ru: {
-        serbia:
-          'С 1 мая 2026 года Сербия ввела обязательную маркировку продуктов с пальмовыми жирами с использованием «желтого треугольника». Новые правила требуют полной прозрачности цепочек поставок и цифровой регистрации закупок сельхозпродукции.',
-        poland:
-          'В Польше гидрологическая засуха в регионах Wielkopolskie и Lubuskie угрожает урожаю рапса. В отдельных районах урожайность может снизиться до 1–1.5 т/га.',
-        bulgaria:
-          'Болгария расширила инфраструктуру порта Варна, позволяя крупным танкерам из Юго-Восточной Азии разгружаться напрямую без перевалки через Турцию.',
-        kazakhstan:
-          'Казахстан открыл новый экспортный маршрут через порт Актау в Иран. Потенциал маршрута оценивается в 150–200 тыс. тонн масел в год.',
-        logistics:
-          'Средний коридор TITR сократил сроки доставки с 53 дней в 2022 году до 15 дней в 2026 году. Одновременно страховые премии в Черном море достигли 1% стоимости судна.',
-        eudr:
-          'Упрощение EUDR в ЕС сократило ожидаемые расходы на compliance примерно с €8.1 млрд до €2 млрд.'
-      },
-      en: {
-        serbia:
-          'Since May 1, 2026 Serbia introduced mandatory “yellow triangle” labeling for products containing palm-based fats. New regulations require higher supply-chain transparency and digital registration of agricultural procurement.',
-        poland:
-          'Hydrological drought in Poland’s Wielkopolskie and Lubuskie regions threatens rapeseed harvests, with yields in some areas potentially falling to 1–1.5 t/ha.',
-        bulgaria:
-          'Bulgaria expanded Port Varna infrastructure, allowing large Southeast Asian tankers to unload directly without Turkish transshipment.',
-        kazakhstan:
-          'Kazakhstan launched a new export route via Aktau port to Iran with estimated annual capacity of 150–200 thousand tons of vegetable oils.',
-        logistics:
-          'The TITR Middle Corridor reduced transit times from 53 days in 2022 to 15 days in 2026, while Black Sea insurance premiums surged to 1% of vessel value.',
-        eudr:
-          'EU EUDR simplification reduced expected compliance costs from approximately €8.1bn to €2bn.'
-      }
-    },
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
 
-    ru: {
-      title: 'Аналитический отчет по рынку растительных масел и жиров',
-      subtitle: 'Ключевые события · 11–18 мая 2026',
-      summaryTitle: 'Краткое резюме',
-      summary:
-        'Период характеризовался высокой геополитической напряженностью, устойчивыми ценами на нефть выше 100 USD/barrel и сокращением глобального баланса растительных масел на фоне роста спроса со стороны биотопливного сектора.',
-      highlightsTitle: 'Ключевые акценты',
-      highlights: [
-        'Сербия усилила регулирование пищевой продукции с пальмовыми ингредиентами.',
-        'Узбекистан использует лишь 37% перерабатывающих мощностей.',
-        'Средний коридор TITR сократил сроки доставки до 15 дней.',
-        'Засуха в Польше и странах Балтии ухудшает перспективы урожая рапса.'
-      ],
-      pricingTitle: 'Цены и конкурентная среда',
-      pricingText:
-        'Пальмовое масло восстановилось после коррекции начала мая. Аналитики ожидают рост котировок летом 2026 года благодаря ограниченному предложению и росту биотопливного спроса.',
-      productionTitle: 'Производство и торговые потоки',
-      productionText:
-        'Польша столкнулась с засухой, Болгария расширяет мощности порта Варна, а Казахстан активно развивает экспорт через Каспийский маршрут.',
-      logisticsTitle: 'Логистика и безопасность',
-      logisticsText:
-        'Маршрут TITR укрепляет позиции как более быстрый и безопасный коридор между Азией и Европой.',
-      regulationTitle: 'Регулирование и EUDR',
-      regulationText:
-        'ЕС подтвердил упрощение требований EUDR, а страны Кавказа усилили сотрудничество в области продовольственной безопасности.',
-      conclusionTitle: 'Выводы',
-      conclusion:
-        'Пальмовое масло продолжает усиливать позиции как один из наиболее стабильных ресурсов региона.',
-      switcher: 'English'
-    },
+        .header {
+            background: #1e3a5f;
+            color: white;
+            padding: 20px 18px 16px;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 12px;
+        }
 
-    en: {
-      title: 'Analytical Report on the Vegetable Oils and Fats Market',
-      subtitle: 'Key Events · 11–18 May 2026',
-      summaryTitle: 'Executive Summary',
-      summary:
-        'The period was marked by elevated geopolitical tensions, crude oil prices above USD 100/bbl, and tightening vegetable oil balances due to growing biofuel demand.',
-      highlightsTitle: 'Key Highlights',
-      highlights: [
-        'Serbia strengthened regulations for food products containing palm-based ingredients.',
-        'Uzbekistan is utilizing only 37% of crushing capacity.',
-        'The TITR corridor reduced delivery times to 15 days.',
-        'Drought in Poland and the Baltics is impacting rapeseed prospects.'
-      ],
-      pricingTitle: 'Pricing and Competitive Environment',
-      pricingText:
-        'Palm oil rebounded after the early-May correction. Analysts expect prices to strengthen further during summer 2026.',
-      productionTitle: 'Production and Trade Flows',
-      productionText:
-        'Poland faces drought risks, Bulgaria expands Port Varna capacity, and Kazakhstan develops exports through the Caspian route.',
-      logisticsTitle: 'Logistics and Security',
-      logisticsText:
-        'The TITR corridor is strengthening its role as a faster and safer route between Asia and Europe.',
-      regulationTitle: 'Regulation and EUDR',
-      regulationText:
-        'The EU confirmed EUDR simplification measures while Caucasus countries expanded food safety cooperation.',
-      conclusionTitle: 'Conclusion',
-      conclusion:
-        'Palm oil continues strengthening its position as one of the region’s most stable commodities.',
-      switcher: 'Русский'
-    }
-  };
+        .lang-switch {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
 
-  const t = content[lang];
-  const extra = content.insights[lang];
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-  const priceData = [
-    { date: '07 May', price: 4559 },
-    { date: '11 May', price: 4551 },
-    { date: '14 May', price: 4438 },
-    { date: '15 May', price: 4420 },
-    { date: '18 May', price: 4540 }
-  ];
+        .lang-btn.active {
+            background: #ffb347;
+            color: #1e2a3a;
+        }
 
-  const spreadData = [
-    { product: 'Palm Olein', value: 1202 },
-    { product: 'Sunflower Oil', value: 1200 },
-    { product: 'Rapeseed Oil', value: 1323 },
-    { product: 'Soybean Oil', value: 1516 }
-  ];
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 8px 0 4px;
+        }
 
-  return (
-    <div className="min-h-screen bg-neutral-100 text-neutral-900 font-sans">
-      <div className="max-w-5xl mx-auto px-4 py-6">
-        <div className="sticky top-0 z-20 bg-neutral-100 py-4 flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-              {t.title}
-            </h1>
-            <p className="text-neutral-600 mt-2">{t.subtitle}</p>
-          </div>
+        .sub {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
 
-          <button
-            type="button"
-            onClick={() => setLang(lang === 'ru' ? 'en' : 'ru')}
-            className="bg-black text-white px-4 py-2 rounded-2xl shadow-lg"
-          >
-            {t.switcher}
-          </button>
+        .section {
+            background: white;
+            margin: 16px 14px;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e9edf2;
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            padding: 18px 20px 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #eef2f6;
+        }
+
+        .section-title span {
+            background: #1e3a5f10;
+            font-size: 1.5rem;
+        }
+
+        .content {
+            padding: 16px 20px 20px;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 12px 0;
+        }
+
+        .price-table th, .price-table td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 10px 6px;
+            text-align: left;
+        }
+
+        .price-table th {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .highlight {
+            font-weight: 700;
+            color: #c2410c;
+        }
+
+        .topic-image {
+            width: 100%;
+            border-radius: 20px;
+            margin: 16px 0 12px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 1px solid #eef2ff;
+        }
+
+        .topic-image img {
+            width: 100%;
+            border-radius: 18px;
+            display: block;
+        }
+
+        .img-caption {
+            font-size: 0.7rem;
+            color: #5a6e7c;
+            padding: 8px 0 0;
+            text-align: center;
+        }
+
+        canvas {
+            max-height: 220px;
+            margin: 12px 0;
+        }
+
+        .insight {
+            background: #fef9e6;
+            border-left: 5px solid #f4b942;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin: 18px 0;
+            font-size: 0.9rem;
+        }
+
+        hr {
+            margin: 18px 0;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, #e2e8f0, transparent);
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6c7a89;
+            padding: 24px 16px 32px;
+            border-top: 1px solid #eef2f6;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="lang-switch">
+            <button class="lang-btn active" data-lang="ru">🇷🇺 Русский</button>
+            <button class="lang-btn" data-lang="en">🇬🇧 English</button>
         </div>
-
-        <img
-          src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?q=80&w=1600&auto=format&fit=crop"
-          alt="Market"
-          className="w-full h-72 object-cover rounded-3xl shadow-xl mb-8"
-        />
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">{t.summaryTitle}</h2>
-          <p className="leading-8 text-neutral-700">{t.summary}</p>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-5">{t.highlightsTitle}</h2>
-
-          <div className="grid gap-4">
-            {t.highlights.map((item, index) => (
-              <div
-                key={index}
-                className="bg-neutral-100 rounded-2xl p-4 leading-7"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">{t.pricingTitle}</h2>
-
-          <p className="leading-8 text-neutral-700 mb-8">
-            {t.pricingText}
-          </p>
-
-          <div className="h-80 mb-10">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={priceData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="price"
-                  stroke="#111827"
-                  strokeWidth={3}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={spreadData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="product" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" fill="#111827" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">{t.productionTitle}</h2>
-
-          <p className="leading-8 text-neutral-700 mb-6">
-            {t.productionText}
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-neutral-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">Serbia</h3>
-              <p>{extra.serbia}</p>
-            </div>
-
-            <div className="bg-neutral-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">Poland</h3>
-              <p>{extra.poland}</p>
-            </div>
-
-            <div className="bg-neutral-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">Bulgaria</h3>
-              <p>{extra.bulgaria}</p>
-            </div>
-
-            <div className="bg-neutral-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">Kazakhstan</h3>
-              <p>{extra.kazakhstan}</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">{t.logisticsTitle}</h2>
-
-          <p className="leading-8 text-neutral-700 mb-6">
-            {t.logisticsText}
-          </p>
-
-          <div className="bg-neutral-100 rounded-2xl p-5 mb-6">
-            {extra.logistics}
-          </div>
-
-          <div className="overflow-hidden rounded-2xl border border-neutral-200">
-            <table className="w-full text-sm">
-              <thead className="bg-black text-white">
-                <tr>
-                  <th className="text-left p-4">Route</th>
-                  <th className="text-left p-4">Transit</th>
-                  <th className="text-left p-4">Freight</th>
-                  <th className="text-left p-4">Risk</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr className="border-b">
-                  <td className="p-4">TITR</td>
-                  <td className="p-4">15–19 days</td>
-                  <td className="p-4">$3,500–4,500</td>
-                  <td className="p-4">Low</td>
-                </tr>
-
-                <tr>
-                  <td className="p-4">Black Sea</td>
-                  <td className="p-4">37–45 days</td>
-                  <td className="p-4">$10,000+</td>
-                  <td className="p-4">High</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">
-            {t.regulationTitle}
-          </h2>
-
-          <p className="leading-8 text-neutral-700 mb-6">
-            {t.regulationText}
-          </p>
-
-          <div className="bg-neutral-100 rounded-2xl p-5">
-            {extra.eudr}
-          </div>
-        </section>
-
-        <section className="bg-black text-white rounded-3xl shadow-2xl p-8 mb-10">
-          <h2 className="text-2xl font-bold mb-4">
-            {t.conclusionTitle}
-          </h2>
-
-          <p className="leading-8 text-neutral-300">
-            {t.conclusion}
-          </p>
-        </section>
-      </div>
+        <h1 id="main-title">Масложировой рынок<br><span style="font-size:1rem;">Обзор 11–18 мая 2026</span></h1>
+        <div class="sub" id="geo-cover">ЕС-27, Центральная Азия, Кавказ, Украина, РФ</div>
     </div>
-  );
-}
+
+    <div id="app-content"></div>
+    <div class="footer">
+        <span id="footer-text">Аналитический дайджест | Транспортные коридоры, цены, регулирование</span>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        ru: {
+            exec_title: "🪙 Ключевые события",
+            exec_text: "Цены на нефть выше 100 USD/барр., пальмовое масло удерживается выше 4500 ринггит/т. POGO-спред остаётся глубоко отрицательным, поддерживая биодизельную экономику ЕС. Узбекистан: загрузка мощностей 37% — структурный дефицит сырья. Транскаспийский маршрут: 15 дней до Баку.",
+            prices_title: "📊 Цены и динамика",
+            table_cpo: "CPO (Bursa Malaysia, июль 2026)",
+            cpo_dates: ["7 мая","11 мая","14 мая","15 мая","18 мая"],
+            cpo_prices: [4559,4551,4438,4420,4540],
+            comp_title: "Сравнение масел (15–18 мая, USD/т)",
+            table_compare: [
+                { prod: "Пальм. олеин RBD", price: 1202, change: "+9.9%" },
+                { prod: "Подсолнечное", price: "1150-1250", change: "снижение" },
+                { prod: "Рапсовое", price: 1323, change: "+2.2%" },
+                { prod: "Соевое", price: 1516, change: "+4.5%" }
+            ],
+            spread_title: "POGO спред (пальма / газойль)",
+            spread_desc: "Дисконт $100-200/т сохраняет выгодное смешивание биодизеля в ЕС.",
+            serbia_title: "🇷🇸 Сербия: регуляторный сдвиг",
+            serbia_text: "Жёлтый треугольник на молочных аналогах и выпечке: «Не 100% молочный продукт — содержит пальмовое масло». Закон о торговой практике требует письменных контрактов и финансового отчёта. Запрет экспорта биоfuel-компонентов продлён до 30 июня.",
+            poland_title: "🇵🇱 Польша: климатический удар",
+            poland_text: "Гидрологическая засуха в Великопольском и Любушском воеводствах, озимый рапс под стрессом. Оценка дефицита до 500 тыс. тонн в сезоне 2026.",
+            uzbek_title: "🇺🇿 Узбекистан: 37% мощности",
+            uzbek_text: "Мощности масложировой экстракции — 4.5 млн тонн, загрузка <37% из-за нехватки семян. Импорт подсолнечного масла из Казахстана вырос на 41% г/г.",
+            kazakh_title: "🇰🇿 Казахстан: каспийский маршрут",
+            kazakh_text: "Запуск маршрута Актау – Иран: 5 тыс. тонн масла уже отгружено. Потенциал 150-200 тыс. тонн масла в год. Рекордные запасы семян подсолнечника 2.11 млн т (+38%).",
+            log_title: "🚢 Логистика и безопасность",
+            log_table: [
+                { param: "Время транзита (Азия-ЕС)", middle: "15–19 дней", blacksea: "37–45 дней" },
+                { param: "Ставка фрахта (USD/FEU)", middle: "$3 500 – 4 500", blacksea: "$10 000 (спот)" },
+                { param: "Страхование войны", middle: "стандартное", blacksea: "1% стоимости судна" }
+            ],
+            titr_text: "Средний коридор (TITR) стал предпочтительным для поставок жиров: сокращение до 15 дней, цифровизация таможни.",
+            eudr_title: "📜 Регулирование: EUDR",
+            eudr_text: "Упрощение EUDR: снижение затрат на соблюдение с €8,1 млрд до €2 млрд. Только первый импортёр подаёт декларацию DDS. Россия: повышение базы пошлины на подсолнечное масло до 90 750 руб/т."
+        },
+        en: {
+            exec_title: "🪙 Key Events",
+            exec_text: "Oil >100 USD/bbl, palm holds above 4,500 RM/t. POGO spread deep discount supports EU biodiesel. Uzbekistan: 37% crush utilization – structural seed gap. Trans-Caspian route reaches 15 days to Baku.",
+            prices_title: "📊 Price Dynamics",
+            table_cpo: "CPO (Bursa Malaysia, July 2026)",
+            cpo_dates: ["May 7","May 11","May 14","May 15","May 18"],
+            cpo_prices: [4559,4551,4438,4420,4540],
+            comp_title: "Oils comparison (May 15–18, USD/t)",
+            table_compare: [
+                { prod: "RBD Palm Olein", price: 1202, change: "+9.9%" },
+                { prod: "Sunflower", price: "1150-1250", change: "downward" },
+                { prod: "Rapeseed", price: 1323, change: "+2.2%" },
+                { prod: "Soybean", price: 1516, change: "+4.5%" }
+            ],
+            spread_title: "POGO Spread (palm/gasoil)",
+            spread_desc: "$100-200/t discount keeps biodiesel blending profitable in the EU.",
+            serbia_title: "🇷🇸 Serbia: Regulatory shift",
+            serbia_text: "Yellow triangle label for dairy analogues & filled pastries: 'Not 100% dairy – contains palm oil'. Trade Law requires written contracts. Export ban on biofuel components extended to June 30.",
+            poland_title: "🇵🇱 Poland: Climate shock",
+            poland_text: "Hydrological drought in Wielkopolskie & Lubuskie, winter rapeseed under severe stress. Deficit estimated at 500k tons for 2026 season.",
+            uzbek_title: "🇺🇿 Uzbekistan: 37% utilization",
+            uzbek_text: "Crushing capacity 4.5m tonnes, actual use <37% due to seed shortage. Sunflower oil imports from Kazakhstan +41% y/y.",
+            kazakh_title: "🇰🇿 Kazakhstan: Caspian route",
+            kazakh_text: "Aktau – Iran route launched: 5k tons of oil shipped. Throughput potential 150–200k tons/year. Record sunflower seed stocks 2.11m t (+38%).",
+            log_title: "🚢 Logistics & Security",
+            log_table: [
+                { param: "Transit time (Asia-EU)", middle: "15–19 days", blacksea: "37–45 days" },
+                { param: "Freight rate (USD/FEU)", middle: "$3,500 – 4,500", blacksea: "$10,000 (spot)" },
+                { param: "War insurance", middle: "standard", blacksea: "1% of vessel value" }
+            ],
+            titr_text: "Middle Corridor (TITR) is the preferred route for fats supply: 15-day delivery, digital customs.",
+            eudr_title: "📜 EUDR simplification",
+            eudr_text: "EUDR cost cut from €8.1bn to €2bn. Only first importer submits DDS. Russia: sunflower export duty base increased to 90,750 RUB/t."
+        }
+    };
+
+    function render(lang) {
+        const t = translations[lang];
+        const container = document.getElementById('app-content');
+        if (!container) return;
+
+        let html = `
+            <div class="section">
+                <div class="section-title"><span>📌</span> ${t.exec_title}</div>
+                <div class="content"><p>${t.exec_text}</p></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title"><span>📈</span> ${t.prices_title}</div>
+                <div class="content">
+                    <strong>${t.table_cpo}</strong>
+                    <table class="price-table">
+                        <tr><th>Дата / Date</th><th>Цена (RM/t)</th></tr>
+        `;
+        for (let i=0; i<t.cpo_dates.length; i++) {
+            html += `<tr><td>${t.cpo_dates[i]}</td><td class="highlight">${t.cpo_prices[i]}</td></tr>`;
+        }
+        html += `</table>
+                 <canvas id="cpoChart" style="height:180px; width:100%"></canvas>
+                 <hr>
+                 <strong>${t.comp_title}</strong>
+                 <table class="price-table">
+                    <tr><th>Продукт</th><th>Цена (USD/t)</th><th>Изменение</th></tr>`;
+        for (let item of t.table_compare) {
+            html += `<tr><td>${item.prod}</td><td>${item.price}</td><td>${item.change}</td></tr>`;
+        }
+        html += `</table>
+                 <div class="insight">🍃 ${t.spread_title}<br>${t.spread_desc}</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title"><span>🌾</span> Регионы / Regions</div>
+                <div class="content">
+                    <div class="topic-image"><img src="https://placehold.co/600x200/fdf6e3/c17e2d?text=Rapeseed+drought+Poland" alt="drought"><div class="img-caption">🌽 Засуха в Польше / Drought in Poland</div></div>
+                    <strong>${t.serbia_title}</strong><p>${t.serbia_text}</p>
+                    <strong>${t.poland_title}</strong><p>${t.poland_text}</p>
+                    <div class="topic-image"><img src="https://placehold.co/600x180/cde3f0/1e4a6e?text=Caspian+Route+to+Iran" alt="caspian route"><div class="img-caption">🚢 Порт Актау — новый маршрут в Иран</div></div>
+                    <strong>${t.uzbek_title}</strong><p>${t.uzbek_text}</p>
+                    <strong>${t.kazakh_title}</strong><p>${t.kazakh_text}</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title"><span>🚛</span> ${t.log_title}</div>
+                <div class="content">
+                    <table class="price-table">
+                        <tr><th>Параметр</th><th>Срединный коридор (TITR)</th><th>Черноморский маршрут</th></tr>`;
+        for (let row of t.log_table) {
+            html += `<tr><td>${row.param}</td><td>${row.middle}</td><td>${row.blacksea}</td></tr>`;
+        }
+        html += `</table><p>${t.titr_text}</p>
+                 <div class="topic-image"><img src="https://placehold.co/600x180/b3d9ff/003366?text=TITR+Middle+Corridor+Map" alt="TITR"><div class="img-caption">🛤️ Транскаспийский маршрут: время сокращено до 15 дней</div></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title"><span>⚖️</span> ${t.eudr_title}</div>
+                <div class="content"><p>${t.eudr_text}</p></div>
+            </div>
+        `;
+        container.innerHTML = html;
+
+        const ctx = document.getElementById('cpoChart');
+        if (ctx) {
+            if (window.cpoChartInstance) window.cpoChartInstance.destroy();
+            window.cpoChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: t.cpo_dates,
+                    datasets: [{
+                        label: lang === 'ru' ? 'CPO фьючерс (RM/t)' : 'CPO futures (RM/t)',
+                        data: t.cpo_prices,
+                        borderColor: '#c2410c',
+                        backgroundColor: 'rgba(194,65,12,0.05)',
+                        tension: 0.2,
+                        fill: true,
+                        pointBackgroundColor: '#f97316',
+                        pointRadius: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: (ctx) => `${ctx.raw} RM/t` } } }
+                }
+            });
+        }
+    }
+
+    let currentLang = 'ru';
+    function setLang(lang) {
+        currentLang = lang;
+        render(lang);
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.getAttribute('data-lang') === lang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        const titleEl = document.getElementById('main-title');
+        if (titleEl) {
+            if (lang === 'ru') titleEl.innerHTML = 'Масложировой рынок<br><span style="font-size:1rem;">Обзор 11–18 мая 2026</span>';
+            else titleEl.innerHTML = 'Oils & Fats Market<br><span style="font-size:1rem;">Update May 11–18, 2026</span>';
+        }
+        const footerSpan = document.getElementById('footer-text');
+        if (footerSpan) {
+            if (lang === 'ru') footerSpan.innerText = 'Аналитический дайджест | Транспортные коридоры, цены, регулирование';
+            else footerSpan.innerText = 'Analytical digest | Logistics, prices & regulations';
+        }
+        const geo = document.getElementById('geo-cover');
+        if (geo) {
+            if (lang === 'ru') geo.innerText = 'ЕС-27, Центральная Азия, Кавказ, Украина, РФ';
+            else geo.innerText = 'EU-27, Central Asia, Caucasus, Ukraine, Russia';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setLang('ru');
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const l = btn.getAttribute('data-lang');
+                if (l === 'ru' || l === 'en') setLang(l);
+            });
+        });
+    });
+</script>
+</body>
+</html>
